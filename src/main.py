@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Add the src directory to Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
@@ -22,7 +21,7 @@ def main(console_type=None):
         
         if console_type is None:
             console_manager = ConsoleManager()
-            console_manager.launch_consoles()        
+            console_manager.launch_consoles()
         else:
             asyncio.run(run_meeting(master_config, console_type))
         return

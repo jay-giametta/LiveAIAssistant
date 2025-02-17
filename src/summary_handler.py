@@ -44,6 +44,10 @@ class SummaryHandler:
         <format>
         {self.prompt_template}
         </format>
+        <direction>
+        After you've created your response, double-check one more time to make sure that you're following the template and not adding anything outside of
+        what I asked for. It's very important that you check to remove any content or styling I specifically said I didn't want!!
+        </direction>
         """
 
     async def display_summary(self):
@@ -80,7 +84,7 @@ class SummaryHandler:
         bedrock_request = {
             "prompt": f"\n\nHuman: {bedrock_prompt}\n\nAssistant:",
             "max_tokens_to_sample": 2048,
-            "temperature": 0.2,
+            "temperature": 0.0,
             "top_p": 1,
             "stop_sequences": ["\n\nHuman:"]
         }
