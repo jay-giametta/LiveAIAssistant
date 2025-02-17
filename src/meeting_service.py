@@ -215,7 +215,7 @@ class MeetingService:
                 media_encoding="pcm",
                 show_speaker_label=True,
                 enable_partial_results_stabilization=True,
-                partial_results_stability="medium",
+                partial_results_stability="low",
                 session_id=str(uuid.uuid4())
             )
             logger.debug("Transcribe stream setup complete")
