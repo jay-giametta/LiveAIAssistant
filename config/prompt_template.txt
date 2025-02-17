@@ -11,21 +11,21 @@
 [If you're able to pick up on organizations, teams, roles or other peprtinant information you should include it by the speaker (always use proper capitalization for titles/orgs/teams)]
 
 ### Notes
-[Organize by topic if clear topics exist. Otherwise list key discussion points]
-* [Use clear parent/child bullet point relationships]
-* [Use nesting up to 2-3 levels to improve readability]
-* [Group related items even if discussed at different times]
-* [Ensure technical accuracy and specificity ]
-* [Provide sufficient context for future reference]
-* [Maintain consistent terminology 
-* [Remove vague/ambiguous information]
+[You must organize entries using markdown-style top-level bullets by main topic or key decision point.]
+[You must use markdown-style sub-bullets/indentation for up to 2-3 levels to improve readability]
+[Use clear parent/child bullet point relationships]
+[Group related items even if discussed at different times]
+[Ensure technical accuracy and specificity ]
+[Provide sufficient context for future reference]
+[Maintain consistent terminology]
+[Remove vague/ambiguous information]
 
 ### Way Ahead
 [Include actual next steps/action items mentioned. It's critical we don't miss any of these. Remove section if none discussed]
 
 [You must remove additional information that doesn't fit in these categories from results]
 [You must remove additional information  on how well you were able to answer my question or if you did]
-[You must remove any section headers and placeholders from your results if there is no actual content to include.
+[You must remove any section headers and placeholders from your results if there is no actual content to include.]
 [You must remove non-meeting content or meta-information like "Here are concise meeting notes based on the provided transcript:" from your results]
 [You must remove vague speaker descriptions like "Speaker 0" from your results]
 [You must remove template text like "MEETING_TYPE", "ORGANIZATION_1", etc.]
