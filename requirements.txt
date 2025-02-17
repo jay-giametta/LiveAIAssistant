@@ -18,5 +18,8 @@ json5>=0.9.6
 # Path handling
 pathlib>=1.0.1
 
-#File IO
+# File IO
 aiofiles>=23.2.1
+
+# Logging
+multiprocessing-logging>=0.3.4

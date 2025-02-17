@@ -15,38 +15,40 @@ if errorlevel 1 (
 if not exist "config\config.json" (
     echo Error: config.json not found in config directory
     echo Please create config\config.json with your AWS credentials
-    echo Example format:
-    echo {
-    echo     "aws_access_key_id": "your_access_key",
-    echo     "aws_secret_access_key": "your_secret_key",
-    echo     "region": "your_region"
-    echo }
     pause
     exit /b 1
 )
 
-:: Create virtual environment if it doesn't exist
-if not exist "venv" (
-    echo Creating virtual environment...
-    python -m venv venv
-    if errorlevel 1 (
-        echo Error: Failed to create virtual environment
-        pause
-        exit /b 1
-    )
+:: Remove existing venv if it exists
+if exist "venv" (
+    echo Removing existing virtual environment...
+    rmdir /s /q "venv"
+)
+
+:: Create virtual environment
+echo Creating virtual environment...
+python -m venv venv
+if errorlevel 1 (
+    echo Error: Failed to create virtual environment
+    pause
+    exit /b 1
 )
 
 :: Activate virtual environment and install requirements
 echo Activating virtual environment and installing requirements...
-call venv\Scripts\activate
+call venv\Scripts\activate.bat
 if errorlevel 1 (
     echo Error: Failed to activate virtual environment
     pause
     exit /b 1
 )
 
+:: Verify we're in the virtual environment
+where python
+where pip
+
 :: Upgrade pip
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip --no-warn-script-location
 if errorlevel 1 (
     echo Error: Failed to upgrade pip
     pause
@@ -54,7 +56,7 @@ if errorlevel 1 (
 )
 
 :: Install requirements
-pip install -r requirements.txt
+python -m pip install -r requirements.txt --no-warn-script-location
 if errorlevel 1 (
     echo Error: Failed to install requirements
     pause
@@ -77,4 +79,6 @@ echo 2. Run these commands:
 echo    .\venv\Scripts\activate
 echo    python -m src.main
 echo.
-pause
+
+:: Keep the virtual environment active
+cmd /k "venv\Scripts\activate.bat"

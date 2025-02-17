@@ -1,3 +1,3 @@
 @echo off
-call venv\Scripts\activate
-python -O -m src.main
+call venv\Scripts\activate.bat
+python -m src.main
