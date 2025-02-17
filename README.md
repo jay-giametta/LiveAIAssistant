@@ -11,6 +11,11 @@ A Python application that provides real-time transcription and AI-powered summar
 - Automatic saving of transcripts and meeting notes
 - Robust logging system for debugging and monitoring
 
+## Example Outputs
+![image](https://github.com/user-attachments/assets/2c4cd5bc-3e38-4790-a60c-b571e840417f)
+  
+![image](https://github.com/user-attachments/assets/ba565ed5-a564-4023-a745-d515d3b53d9d)
+
 ## Important Note
 
 ⚠️ **Platform Compatibility**: This application was developed and tested on Windows systems and uses Windows-specific commands in some of its internal operations. While the core functionality may work on other operating systems, some features might require modification for:
