@@ -1,0 +1,24 @@
+## [Be sure to include the actual date if its in the transcript]
+
+### Attendees
+[Only list actual speaker names if known. Do not attempt to describe attendees... real names of people only. Remove this section if no clear attendees]
+
+### Notes
+[Organize by topic if clear topics exist. Otherwise list key discussion points]
+* [Use clear parent/child bullet point relationships]
+* [Limit nesting to 2-3 levels for readability]
+* [Group related items even if discussed at different times]
+* [Maintain parallel structure within each bullet list]
+* [Provide sufficient context for future reference ]
+* [Ensure technical accuracy and specificity ]
+* [Maintain consistent terminology ]
+* [Exclude vague/ambiguous information]
+* [Exclude vague speaker descriptions like "Speaker 0" from transcripts]
+
+### Way Ahead
+[Only include actual next steps/action items mentioned. Remove section if none discussed]
+
+[Do not add any additional information that doesn't fit in these categories]
+[Do not update me on how well you were able to answer my question or if you did... whatever you add that isn't in the trancript will end up in my notes and cause confusion]
+
+Important: Remove any section headers and placeholders if there is no actual content to include. Do not include template text like "MEETING_TYPE", "ORGANIZATION_1", etc.

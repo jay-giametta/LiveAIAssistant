@@ -1,0 +1,22 @@
+# AWS SDK and Transcribe
+boto3>=1.26.0
+amazon-transcribe>=0.5.0
+
+# Audio handling
+PyAudio>=0.2.13
+
+# Console and window management
+windows-curses>=2.3.1; platform_system=="Windows"
+colorama>=0.4.6
+
+# Async support
+asyncio>=3.4.3
+
+# JSON handling
+json5>=0.9.6
+
+# Path handling
+pathlib>=1.0.1
+
+#File IO
+aiofiles>=23.2.1
