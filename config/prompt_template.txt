@@ -7,7 +7,7 @@
 
 ### Attendees
 [Descriptions from the transcript should only be considered for context. Never include descriptors like 'Speaker 0' in the notes]
-[You must list actual speaker names if known and present. It's important not to miss people.]
+[You must list actual speaker names if confidently known and definitely present. It's important not to miss people.]
 [Include speaker organizations, teams, roles or other pertinant information if you can identify it]
 [Always use proper capitalization for titles/orgs/teams]
 [Do not list attendees that aren't currently present]
@@ -16,6 +16,7 @@
 
 ### Notes
 [You must organize entries using markdown-style top-level bullets by main topic or key decision point.]
+[You must format the top-level ideas as bold list items]
 [You must use markdown-style sub-bullets/indentation for up to 2-3 levels to improve readability]
 [Use clear parent/child bullet point relationships]
 [Group related items even if discussed at different times]
