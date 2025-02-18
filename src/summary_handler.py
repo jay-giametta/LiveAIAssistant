@@ -32,7 +32,7 @@ class SummaryHandler:
             config (dict): Configuration dictionary containing AWS credentials and settings
             console_type (str, optional): Type of console display to use. Defaults to None.
         """
-        # Initialize AWS Bedrock client and setup summary handling
+        self.config = config
         self.bedrock_client = boto3.client(
             service_name='bedrock-runtime',
             region_name=config['region'],
@@ -150,22 +150,27 @@ class SummaryHandler:
             str: Generated response from Bedrock API
         """
         bedrock_request = {
-            "prompt": f"\n\nHuman: {bedrock_prompt}\n\nAssistant:",
-            "max_tokens_to_sample": 2048,
+            "anthropic_version": "bedrock-2023-05-31",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": bedrock_prompt
+                }
+            ],
+            "max_tokens": 2048,
             "temperature": 0.0,  # Use deterministic output
             "top_p": 1,
-            "stop_sequences": ["\n\nHuman:"]
         }
 
         bedrock_response = self.bedrock_client.invoke_model(
             body=json.dumps(bedrock_request),
-            modelId="anthropic.claude-v2",
+            modelId=self.config.get('model_config', {}).get('inference_profile_arn', "anthropic.claude-3-sonnet-20240229-v1:0"),
             contentType="application/json",
             accept="application/json"
         )
         
         response_body = json.loads(bedrock_response['body'].read())
-        return response_body.get('completion', '').strip()
+        return response_body.get('content', [{}])[0].get('text', '').strip()
 
     def load_prompt_template(self) -> str:
         """
