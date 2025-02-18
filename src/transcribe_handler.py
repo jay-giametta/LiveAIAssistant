@@ -144,6 +144,7 @@ class TranscribeHandler(TranscriptResultStreamHandler):
     async def handle_transcript(self, transcript_event):
         """
         Process transcript results and buffer complete segments.
+        Only processes the highest confidence alternative for each result.
 
         Args:
             transcript_event: Event containing transcription results.
@@ -164,20 +165,26 @@ class TranscribeHandler(TranscriptResultStreamHandler):
                     logger.debug("Skipping partial result")
                     continue
                 
-                for alternative in transcript_result.alternatives:
-                    if not hasattr(alternative, 'items'):
-                        logger.debug("Skipping alternative without items")
-                        continue
+                # Only process the first (highest confidence) alternative
+                if not transcript_result.alternatives:
+                    logger.debug("No alternatives found in result")
+                    continue
                     
-                    speaker = self.extract_speaker(alternative.items)
-                    alternative_transcript = alternative.transcript.strip()
+                alternative = transcript_result.alternatives[0]  # Get highest confidence alternative
+                
+                if not hasattr(alternative, 'items'):
+                    logger.debug("Primary alternative lacks items")
+                    continue
+                
+                speaker = self.extract_speaker(alternative.items)
+                alternative_transcript = alternative.transcript.strip()
+                
+                if alternative_transcript and self.should_output(speaker, alternative_transcript):
+                    logger.debug(f"Buffering highest confidence transcript segment from speaker {speaker}")
+                    self.buffer.append((speaker, alternative_transcript))
                     
-                    if alternative_transcript and self.should_output(speaker, alternative_transcript):
-                        logger.debug(f"Buffering transcript segment from speaker {speaker}")
-                        self.buffer.append((speaker, alternative_transcript))
-                        
-                        if time.time() - self.last_flush_time > 2 or len(self.buffer) >= 5:
-                            await self.flush_buffer()
+                    if time.time() - self.last_flush_time > 3 or len(self.buffer) >= 3:
+                        await self.flush_buffer()
         
         except Exception as e:
             logger.error(f"Error processing transcript: {str(e)}", exc_info=True)
@@ -185,15 +192,16 @@ class TranscribeHandler(TranscriptResultStreamHandler):
 
     def should_output(self, current_speaker, alternative_transcript):
         """
-        Determine if transcript segment should be output.
+        Determine if complete transcript segment should be output.
+        Note: This method only processes complete transcripts, never partials.
 
         Args:
             current_speaker (str): Speaker identifier for current segment.
-            alternative_transcript (str): Transcribed text to evaluate.
+            alternative_transcript (str): Complete transcribed text to evaluate.
 
         Returns:
             bool: True if segment should be output, False otherwise.
-            
+                
         Raises:
             ValueError: If input parameters are invalid
         """
@@ -202,13 +210,13 @@ class TranscribeHandler(TranscriptResultStreamHandler):
                 raise ValueError("Empty transcript")
             
             if current_speaker != self.speaker:
-                logger.debug("Speaker change detected - outputting segment")
+                logger.debug("Speaker change detected in complete transcript - outputting segment")
                 return True
             
             should_output = alternative_transcript[-1] in self.sentence_endings
-            logger.debug(f"Segment output decision: {should_output}")
+            logger.debug(f"Complete segment output decision: {should_output}")
             return should_output
-            
+                
         except ValueError as ve:
             logger.warning(f"Invalid output check parameters: {str(ve)}")
             raise

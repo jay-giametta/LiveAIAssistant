@@ -58,7 +58,9 @@ class SummaryHandler:
 
     def create_prompt(self, conversation_text: str) -> str:
         """
-        Create a formatted prompt for the Bedrock API using the conversation transcript.
+        Create a formatted prompt for the Bedrock API using the conversation transcript
+        and previous summary for context. Allows for corrections and refinements of
+        previous information based on new context.
 
         Args:
             conversation_text (str): The transcript text to be summarized
@@ -66,22 +68,49 @@ class SummaryHandler:
         Returns:
             str: Formatted prompt string for Bedrock
         """
+        previous_summary = ""
+        if self.current_display and self.current_display != "Waiting for meeting content...\n":
+            previous_summary = self.current_display
+
         return f"""
         <direction>
-        Create concise meeting notes from this transcript:
+        You are maintaining ongoing meeting notes. You will receive the last 90 seconds of conversation 
+        and the current meeting notes. Your task is to maintain accurate and relevant notes by:
+
+        1. Integrating new information into the existing structure
+        2. Correcting any previous information that new context shows was incorrect
+        3. Removing or modifying points that are no longer relevant or accurate
+        4. Consolidating and refining information as the conversation evolves
+        5. Maintaining only the most current and relevant understanding of the discussion
+
+        Think of this as a living document that should reflect the most accurate and current state 
+        of the meeting's key points, not a historical record of everything discussed.
         </direction>
-        <date>
-        {datetime.now().strftime('%m-%d-%Y')}
-        </date>
-        <transcript>
+
+        <current_notes>
+        {previous_summary}
+        </current_notes>
+
+        <new_transcript>
         {conversation_text}
-        </transcript>
+        </new_transcript>
+
         <format>
         {self.prompt_template}
         </format>
+
         <direction>
-        After you've created your response, double-check one more time to make sure that you're following the template and not adding anything outside of
-        what I asked for. It's very important that you check to remove any content or styling I specifically said I didn't want!!
+        Important guidelines:
+        1. Update or correct any previous information that new context shows was misunderstood
+        2. Remove or modify points that are no longer relevant given new context
+        3. Consolidate similar points and remove redundancies
+        4. Keep only the most current and accurate version of each discussion point
+        5. Maintain clear, concise, and well-organized notes
+        6. Focus on the current understanding rather than preserving outdated information
+
+        After you've created your response, double-check one more time to make sure that you're following 
+        the template and not adding anything outside of what I asked for. It's very important that you 
+        check to remove any content or styling I specifically said I didn't want!!
         </direction>
         """
     async def display_summary(self):
@@ -89,7 +118,7 @@ class SummaryHandler:
         Continuously monitor and update the meeting summary display.
         
         This asynchronous method checks for new transcript content every 5 seconds
-        and generates updated summaries every 20 seconds when new content is available.
+        and generates updated summaries every 30 seconds using 90 seconds of context.
         
         Raises:
             Exception: If there's an error during summary generation or display
@@ -97,7 +126,7 @@ class SummaryHandler:
         try:
             while True:
                 current_time = time.time()
-                if current_time - self.last_summary_time >= 20:  # Update summary every 20 seconds
+                if current_time - self.last_summary_time >= 30:  # Update summary every 30 seconds
                     conversation_text = self.format_conversation()
                     if conversation_text:
                         summary_update = await self.generate_summary(conversation_text)
@@ -111,19 +140,40 @@ class SummaryHandler:
 
     def format_conversation(self) -> str:
         """
-        Read and format the content from the most recent transcript file.
+        Read and format the content from transcript files, maintaining 90 seconds of context.
 
         Returns:
-            str: Formatted conversation text from the latest transcript,
-                 or empty string if no transcript is available
+            str: Formatted conversation text from the last 90 seconds of transcripts,
+                or empty string if no transcript is available
         """
         transcript_dir = Path('output/transcripts')
+        current_time = time.time()
+        
+        if not hasattr(self, 'transcript_buffer'):
+            self.transcript_buffer = []
+        
         if transcript_dir.exists():
             transcript_files = list(transcript_dir.glob('transcript_*.txt'))
             if transcript_files:
                 latest_transcript = max(transcript_files, key=lambda x: x.stat().st_mtime)
                 with open(latest_transcript, 'r', encoding='utf-8') as transcript_reader:
-                    return transcript_reader.read()
+                    current_content = transcript_reader.read()
+                
+                # Add new content with timestamp
+                timestamp_str = datetime.fromtimestamp(current_time).strftime('%I:%M:%S %p')
+                self.transcript_buffer.append({
+                    'content': f"[{timestamp_str}] {current_content}",
+                    'timestamp': current_time
+                })
+                
+                # Remove entries older than 90 seconds
+                self.transcript_buffer = [
+                    entry for entry in self.transcript_buffer 
+                    if (current_time - entry['timestamp']) <= 90
+                ]
+                
+                # Combine the buffered content
+                return '\n'.join(entry['content'] for entry in self.transcript_buffer)
         return ""
 
     async def generate_summary(self, conversation_text: str) -> str:
@@ -157,7 +207,7 @@ class SummaryHandler:
                     "content": bedrock_prompt
                 }
             ],
-            "max_tokens": 2048,
+            "max_tokens": 4096,
             "temperature": 0.0,  # Use deterministic output
             "top_p": 1,
         }

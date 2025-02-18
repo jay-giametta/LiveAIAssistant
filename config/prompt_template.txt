@@ -2,13 +2,17 @@
 [Do not enter information like: These are concise notes about your meeting]
 [You must build your results in a way that allows you to rebuild very similar results on future iterations]
 
-## [Be sure to include the actual date if its in the transcript]
+## [MM-DD-YYYY] - Meeting Summary
+[Be sure to include the actual date in this title if its in the transcript]
 
 ### Attendees
 [Descriptions from the transcript should only be considered for context. Never include descriptors like 'Speaker 0' in the notes]
-[Only list actual speaker names if known. Do not attempt to describe attendees... real names of people only. Remove this section if no clear attendees]
-[Make sure that one you know a speaker's name that you add them to attendees. It's important not to miss people.]
-[If you're able to pick up on organizations, teams, roles or other peprtinant information you should include it by the speaker (always use proper capitalization for titles/orgs/teams)]
+[You must list actual speaker names if known and present. It's important not to miss people.]
+[Include speaker organizations, teams, roles or other pertinant information if you can identify it]
+[Always use proper capitalization for titles/orgs/teams]
+[Do not list attendees that aren't currently present]
+[Do not attempt to describe attendees... real names of people only.]
+[Remove this section if no clear attendees]
 
 ### Notes
 [You must organize entries using markdown-style top-level bullets by main topic or key decision point.]
@@ -22,8 +26,7 @@
 
 ### Way Ahead
 [Include actual next steps/action items mentioned. It's critical we don't miss any of these. Remove section if none discussed]
-
-[You must remove additional information that doesn't fit in these categories from results]
+[You must remove additional information that doesn't fit in Attendees, Notes, or Way Ahead sections]
 [You must remove additional information  on how well you were able to answer my question or if you did]
 [You must remove any section headers and placeholders from your results if there is no actual content to include.]
 [You must remove non-meeting content or meta-information like "Here are concise meeting notes based on the provided transcript:" from your results]
